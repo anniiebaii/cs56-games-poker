@@ -27,6 +27,8 @@ final class PokerSinglePlayer extends PokerGameGui {
      * No arg constructor to create instance of PokerSinglePlayer to begin game
      */
     public PokerSinglePlayer(){
+	//for (Player player:players) 
+	//player.setDelegate(this);
         player.setDelegate(this);
         opponent.setDelegate(this);
     }
@@ -38,6 +40,10 @@ final class PokerSinglePlayer extends PokerGameGui {
      * @param oChips the opponent's chips
      */
     public PokerSinglePlayer(int pChips, int oChips){
+	//for (Player player:players) {
+	//player.setChips(Chips);
+	//player.setDelegate(this)
+	//Change paramenters to only take one input for chips
         player.setChips(pChips);
         opponent.setChips(oChips);
         player.setDelegate(this);
@@ -48,16 +54,18 @@ final class PokerSinglePlayer extends PokerGameGui {
      * Starts game between you and AI
      */
     public void go() {
-        super.setUp();
+        super.setUp(); //Should already be made to create 4 players?
+	//call setUp(1) <?> To initialize with 3 AIs?
         layoutSubViews(); //sets up all of the buttons and panels and GUI
         controlButtons(); //this function is in PokerGameGui.
 
         if(!gameOver){ 
             step = Step.BLIND; //This is the first step in the game.
-            turn = Turn.OPPONENT;
+            turn = Turn.OPPONENT; //create more coherent turn system
             prompt = "opponent goes first!";
             
             int rng = (int) (Math.random()*2); //generate a random 0 or 1 
+	    //random between 0 and 3? choose index of first player?
             if (rng == 1) { //1 = player 1 goes first.
                 turn = Turn.PLAYER;
                 message = "player goes first!";
@@ -75,6 +83,7 @@ final class PokerSinglePlayer extends PokerGameGui {
     }
 
     /**
+     * Remake for multiplayer
      * Method that directs the turn to who it needs to go to
      */
     public void turnDecider () {
@@ -88,6 +97,7 @@ final class PokerSinglePlayer extends PokerGameGui {
 
     
     /**
+     * Remake for Multiplayer
      * Method to activate the opponent AI on turn change.
      * Changes between you and the AI
      */
@@ -169,6 +179,7 @@ final class PokerSinglePlayer extends PokerGameGui {
 
 	    message = winningHandMessage();
 
+	    //message = message + "\nPlayer " + (index# + 1) + "wins!\n\n..."
     	    if (winnerType == Winner.PLAYER) {
                 System.out.println("player");
                 message = message + ("\n\nYou win!\n\nNext round?");
