@@ -20,8 +20,6 @@ public class PokerMain {
      */
     JButton singlePlayerButton;
 
-    JButton multiPlayerButton;
-
     /**
       * Button to start a multiplayer games
     */
@@ -121,6 +119,11 @@ public class PokerMain {
             if (src == singlePlayerButton) {
                 PokerSinglePlayer singlePlayer = new PokerSinglePlayer(500, 500);
                 singlePlayer.go();
+            }
+            // placeholder for now
+            else if (src == multiPlayerButton) {
+              PokerSinglePlayer singlePlayer = new PokerSinglePlayer(500, 500);
+              singlePlayer.go();
             }
             /*
             else if (src == serverButton) {
