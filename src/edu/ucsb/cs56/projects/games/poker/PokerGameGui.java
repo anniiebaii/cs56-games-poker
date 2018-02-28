@@ -524,24 +524,32 @@ public class PokerGameGui extends PokerGameMult{
                 if (bet<=0) {
                     prompt = "Enter a valid bet!";
                 }
-                else if ((player.getChips() - bet >= 0) && (opponent.getChips() - bet >= 0)) {
-                    pot += bet;
-                    player.bet(bet);
-                    prompt = "Player bets " + bet + ".";
-                    updateBetGUIElements();
-                    checkPassTurnUpdate();
-                }
-                else if (((turn == Turn.PLAYER) && (player.getChips() < bet)) || ((turn == Turn.OPPONENT) && (opponent.getChips() < bet))) {
-                    prompt = "Not enough chips!";
-                }
-                else {
-                    allIn = true;
-                    allInBet();
-                    updateBetGUIElements();
-                    checkPassTurnUpdate();
-                }
+		else {
+		    int enoughChips = 0;
+		    for (Player player:players) {
+			if (player.getChips() < bet){
+			    if (player.turn == true) {
+			    	prompt = "Not enough chips!";
+			    }
+			    enoughChips++;
+			}
+		    }
+		    if (enoughChips == 0) {
+			pot += bet;
+              		player.bet(bet);
+              	        prompt = "Player bets " + bet + ".";
+                    	updateBetGUIElements();
+                    	checkPassTurnUpdate();
+		    }
+		    else {
+		         allIn = true;
+                         allInBet();
+                         updateBetGUIElements();
+                         checkPassTurnUpdate();
+                    }
                 updateFrame();
-            }
+                }
+	    }
             else {
                 prompt = "Enter a number of chips to bet!";
                 updateFrame();
