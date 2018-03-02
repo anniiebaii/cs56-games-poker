@@ -34,6 +34,7 @@ public abstract class Player implements Serializable {
      */
     public int status;
     public boolean winStatus;
+    public boolean turn;
     public int type;
 
     /** 
@@ -45,7 +46,7 @@ public abstract class Player implements Serializable {
         chips = 100;
         wins = 0;
 	winStatus = false;
-	type = 1;
+	status = 1;
     }
 
     /**
@@ -130,6 +131,10 @@ public abstract class Player implements Serializable {
     
     public void setWin() {
 	winStatus = true;
+    }
+
+    public int getType() {
+	return type;
     }
 
     /**
