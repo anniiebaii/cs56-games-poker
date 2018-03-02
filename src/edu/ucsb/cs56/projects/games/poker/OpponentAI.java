@@ -31,7 +31,7 @@ public class OpponentAI extends Player implements Serializable {
      * Instructs the program to wait for user input and update the
      * GUI and game based on the user's input
      */
-    public void takeTurn() {
+   /* public void takeTurn() {
         boolean shouldBet = false;
         boolean shouldCall = true;
         int dValue = 0;
@@ -105,4 +105,103 @@ public class OpponentAI extends Player implements Serializable {
             delegate.changeTurn();
         }
     }
+*/
+    public void takeTurn() {
+	boolean shouldBet = false;
+	boolean shouldCall = true;
+	ArrayList<Player> hand = new ArrayList<Player>();
+	hand.add(this);
+	CompareHands handValue = new CompareHands(hand, delegate.table);
+	int value = handValue.calculateValue(this.getHand());
+	
+	int dValue = 2;
+	int betAmount = 5 * dValue;
+	int bet = delegate.getCurrentBet();
+
+	if (delegate.getStep() == PokerGame.Step.BLIND) {
+	    if (value >= 1) 
+		    shouldBet = true;
+	    else {
+		int bluff = (int) (Math.random() * 11);
+		if (bluff >= 7)
+			shouldBet = true;
+	    }
+	}
+	else if (delegate.getStep() == PokerGame.Step.FLOP) {
+	    if (value >= 3) 
+		shouldBet = true;
+	    else {
+                int bluff = (int) (Math.random() * 11);
+                if (bluff >= 7)
+                        shouldBet = true;
+            }
+	    if (value < 3 && delegate.getCurrentBet() >= 40) {
+		shouldCall = false;
+	    }
+	}
+	else if (delegate.getStep() == PokerGame.Step.TURN) {
+	    if (value >=4)
+		shouldBet = true;
+	    else {
+                int bluff = (int) (Math.random() * 11);
+                if (bluff >= 7)
+                        shouldBet = true;
+           }
+	    if (value < 3 && delegate.getCurrentBet() > 40) 
+		shouldCall = false;
+	}
+	else if (delegate.getStep() == PokerGame.Step.RIVER) {
+	    if (value >= 4) 
+		shouldBet = true;
+	    else {
+                int bluff = (int) (Math.random() * 11);
+                if (bluff >= 7)
+                        shouldBet = true;
+            }
+	    if (value < 3 && bet > 40)
+		    shouldCall = false;
+	}
+
+	if (delegate.isResponding()) {
+            if (shouldCall) {
+                if (delegate.isAllIn()) {
+                    delegate.setMessage("opponent goes all in, no more bets will be allowed");
+                    delegate.setBet(this.getChips());
+                }
+                else {
+                    delegate.setMessage("opponent calls.");
+                }
+                delegate.addToPot(bet);
+                this.bet(bet);
+                delegate.setBet(0);
+                delegate.setResponding(false);
+                delegate.nextStep();
+                delegate.updateFrame();
+                delegate.restartTimer();
+            } else {
+                delegate.setMessage("opponent folds.");
+                this.foldHand();
+            }
+        } else if (shouldBet && delegate.getStep() != PokerGame.Step.SHOWDOWN) {
+            if ((this.getChips() - betAmount >= 0) && (delegate.player.getChips() - betAmount >= 0)) {
+                delegate.setBet(betAmount);
+                bet = betAmount;
+                delegate.addToPot(bet);
+                this.bet(bet);
+                delegate.setResponding(true);
+                delegate.setMessage("opponent bets " + bet + " chips.");
+                delegate.updateFrame();
+                delegate.changeTurn();
+            } else {
+                delegate.setMessage("opponent checks.");
+                delegate.updateFrame();
+                delegate.changeTurn();
+            }
+        } else if (delegate.getStep() != PokerGame.Step.SHOWDOWN) {
+            delegate.setMessage("opponent checks.");
+            delegate.updateFrame();
+            delegate.changeTurn();
+        }
+    }
+
 }
